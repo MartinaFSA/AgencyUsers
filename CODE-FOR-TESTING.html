@@ -1,0 +1,51 @@
+<div>
+    <h2>Create Agency</h2>
+    <input id="create-email" placeholder="Email" /><br />
+    <input id="create-name" placeholder="Agency name" /><br />
+    <input id="create-secret" placeholder="Secret" /><br />
+    <button onclick="createAgency()">Create</button>
+    <pre id="create-result"></pre>
+  
+    <hr>
+  
+    <h2>Consult agency data</h2>
+    <input id="get-email" placeholder="Email to look for" /><br />
+    <button onclick="getAgency()">Search</button>
+    <pre id="get-result"></pre>
+  </div>
+  
+  <script>
+    const API_URL = "http://localhost/wordpress/wp-json/agency/v1/agency";
+  
+    function createAgency() {
+      const email = document.getElementById("create-email").value;
+      const name = document.getElementById("create-name").value;
+      const secret = document.getElementById("create-secret").value;
+  
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name, secret })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("create-result").textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById("create-result").textContent = "Error: " + err;
+        });
+    }
+  
+    function getAgency() {
+      const email = document.getElementById("get-email").value;
+      fetch(`${API_URL}?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("get-result").textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById("get-result").textContent = "Error: " + err;
+        });
+    }
+  </script>
+  
